@@ -14,3 +14,5 @@ for item in response.json():
         print('Não existe')
     print(f"Gorduras: {item['attributes']['lipid']['qty']:.2f}g")
     print(f"Calorias: {item['attributes']['energy']['kcal']:.2f}kcal ({item['attributes']['energy']['kj']:.2f}kj)")
+
+print(response)
