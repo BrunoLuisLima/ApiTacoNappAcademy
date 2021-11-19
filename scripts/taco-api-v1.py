@@ -1,3 +1,4 @@
+from typing_extensions import Literal
 import requests
 import json
 import pandas as pd
@@ -5,6 +6,7 @@ import pandas as pd
 
 class tacoApi:
     def __init__(self):
+        self.name_patient = str(input('Qual é nome do seu paciente? '))
         self.list_food = []
         self.list_id = []
         while True:
@@ -19,20 +21,37 @@ class tacoApi:
 
 
     def taco_food(self):
-        for food_id in self.list_id:
-            for food in food_id:
-                if 'carbohydrate' in food['attributes']:
-                    carbohydrate = f"{food['attributes']['carbohydrate']['qty']:.1f}"
+        def normalize(attributes):
+            if type(attributes) == float:
+                new_value = f"{attributes:.1f}"
+            else:
+                new_value = attributes
+            return new_value.replace('.', ',')
+
+
+        def food_not_exist(food):
+            list_macro = ['protein', 'lipid', 'carbohydrate']
+            sublista = []
+            for macro in list_macro:
+                if macro in food:
+                    nutrient = f"{normalize(food[macro]['qty'])}" 
+                    sublista.append(nutrient)
                 else:
-                    carbohydrate = '0'
+                    nutrient = '0'
+                    sublista.append(nutrient)
+            return sublista
+
+
+        for food_id in self.list_id:
+            for food in food_id: 
                 dict_food = {
                     'description': food['description'],
                     'base_qty': food['base_qty'],
-                    'kcal': f"{food['attributes']['energy']['kcal']:.1f}",
-                    'kj': f"{food['attributes']['energy']['kj']:.1f}",
-                    'protein': f"{food['attributes']['protein']['qty']:.1f}",
-                    'lipid': f"{food['attributes']['lipid']['qty']:.1f}",
-                    'carbohydrate': carbohydrate     
+                    'kcal': f"{normalize(food['attributes']['energy']['kcal'])}",
+                    'kj': f"{normalize(food['attributes']['energy']['kj'])}",
+                    'protein': food_not_exist(food['attributes'])[0],
+                    'lipid': food_not_exist(food['attributes'])[1],
+                    'carbohydrate': food_not_exist(food['attributes'])[2]
                 }
                 self.list_food.append(dict_food)
         # print(json.dumps(self.list_food, indent=4))
@@ -44,9 +63,11 @@ class tacoApi:
         list_local = []
         for registro in list_food:
             list_local.append([registro['description'], registro['base_qty'], registro['kcal'], registro['kj'], registro['protein'], registro['lipid'], registro['carbohydrate']])
+
         generate_csv = pd.DataFrame(list_local, columns=['Descrição', 'Quantidade(g)', 'Kcal', 'Kj', 'Proteina(g)', 'Gorduras(g)', 'Carboidrato(g)'])
 
-        generate_csv.to_excel('cardapio.xlsx', index=False)
+        food_csv = generate_csv.to_excel(f"Cardápio_{self.name_patient}.xlsx", index=False)
+        return food_csv
 
             
 if __name__ == "__main__":
