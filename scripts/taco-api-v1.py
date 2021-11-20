@@ -29,7 +29,7 @@ class tacoApi:
             return new_value.replace('.', ',')
 
 
-        def food_not_exist(food):
+        def macro_not_exist(food):
             list_macro = ['protein', 'lipid', 'carbohydrate']
             sublista = []
             for macro in list_macro:
@@ -49,9 +49,9 @@ class tacoApi:
                     'base_qty': food['base_qty'],
                     'kcal': f"{normalize(food['attributes']['energy']['kcal'])}",
                     'kj': f"{normalize(food['attributes']['energy']['kj'])}",
-                    'protein': food_not_exist(food['attributes'])[0],
-                    'lipid': food_not_exist(food['attributes'])[1],
-                    'carbohydrate': food_not_exist(food['attributes'])[2]
+                    'protein': macro_not_exist(food['attributes'])[0],
+                    'lipid': macro_not_exist(food['attributes'])[1],
+                    'carbohydrate': macro_not_exist(food['attributes'])[2]
                 }
                 self.list_food.append(dict_food)
         # print(json.dumps(self.list_food, indent=4))
