@@ -7,7 +7,7 @@ menu_principal.geometry("500x300")
 
 # Input Name
 def getTextInput_1():
-    result=textbox_1.get("1.0")
+    result=textbox_1.get("1.0", "end-1c")
     return result
 
 textbox_1=Text(menu_principal, height=1, width=30)
@@ -20,7 +20,7 @@ btnRead_1.pack()
 # Input id food
 list_test = []
 def getTextInput_2():
-    result = textbox_2.get("1.0")
+    result = textbox_2.get("1.0", "end-1c")
     list_test.append(result)
     # print(list_test)
     return list_test

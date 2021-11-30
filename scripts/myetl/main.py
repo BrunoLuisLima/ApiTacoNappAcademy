@@ -10,6 +10,9 @@ class IntoFood:
             try:
                 idtaco = int(input("Insira o ID do alimento: "))
                 self.list_id.append(idtaco)
+                objeto = ApiExtracty(self.list_id, self.name_pacient)
+                for desc_food in objeto.taco_food():
+                    print(desc_food['description'])
                 resp = ' '
                 while resp not in 'SN':
                     resp = str(input('Deseja adicionar outro alimento: [S/N]')).strip().upper()[0]
